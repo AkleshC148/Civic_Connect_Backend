@@ -56,7 +56,7 @@ exports.loginUser = async (req, res, next) => {
   }
 };
 
-// Logout user (stateless)
+
 exports.logoutUser = async (req, res, next) => {
   try {
     // If using HTTP-only cookies, clear cookie here.

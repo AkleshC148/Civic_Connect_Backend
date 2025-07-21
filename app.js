@@ -8,10 +8,10 @@ const errorHandler = require('./middlewares/errorHandler');
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
-// const candidateRoutes = require('./routes/candidateRoutes');
+const candidateRoutes = require('./routes/candidateRoutes');
 // const postRoutes = require('./routes/postRoutes');
-// const volunteerRoutes = require('./routes/volunteerRoutes');
-// const adminRoutes = require('./routes/adminRoutes');
+const volunteerRoutes = require('./routes/volunteerRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 // const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
@@ -26,10 +26,10 @@ app.use(morgan('dev'));
 // === Routes ===
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-// app.use('/api/candidates', candidateRoutes);
+app.use('/api/candidates', candidateRoutes);
 // app.use('/api/posts', postRoutes);
-// app.use('/api/volunteers', volunteerRoutes);
-// app.use('/api/admin', adminRoutes);
+app.use('/api/volunteers', volunteerRoutes);
+app.use('/api/admin', adminRoutes);
 // app.use('/api/reports', reportRoutes);
 
 // === Error Handling ===

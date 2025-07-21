@@ -1,33 +1,62 @@
-// src/models/VolunteerApplication.js
-
 const mongoose = require('mongoose');
 
 const volunteerSchema = new mongoose.Schema({
-  applicant: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  type: {
+  name: {
     type: String,
-    enum: ['election', 'candidate'],
     required: true,
+    trim: true
   },
-  candidate: {
+
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+
+  phone: {
+    type: String,
+    default: null
+  },
+
+  availability: {
+    type: String,
+    enum: [
+      'Weekdays (Morning)',
+      'Weekdays (Afternoon)',
+      'Weekdays (Evening)',
+      'Weekends (Morning)',
+      'Weekends (Afternoon)',
+      'Weekends (Evening)'
+    ],
+    required: true
+  },
+
+  candidateId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Candidate',
+    default: null  // null means this volunteer signed up for admin
   },
-  region: String,
-  idProofUrl: String,
-  addressProofUrl: String,
-  selfieUrl: String,
-  reason: String,
+
   status: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],
-    default: 'pending',
+    default: 'pending'
   },
-  certificateUrl: String,
-}, { timestamps: true });
 
-module.exports = mongoose.model('Volunteer', volunteerSchema);
+  approvedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // could be an Admin or Candidate (User model handles both)
+    default: null
+  },
+
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const Volunteer = mongoose.model('Volunteer', volunteerSchema);
+
+module.exports = Volunteer;
