@@ -1,7 +1,7 @@
 // middleware/authorizeRoles.js
 
 module.exports = function authorizeRoles(...allowedRoles) {
-  return (req, res, next) => {
+  return (req, res, next)=>{
     try {
       
       if (!req.user || !req.user.role) {

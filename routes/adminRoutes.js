@@ -2,35 +2,42 @@ const express = require('express');
 const router = express.Router();
 
 const authMiddleware = require('../middlewares/authMiddleware');
-const roleMiddleware = require('../middlewares/roleMiddleware');
+const authorizeRoles = require('../middlewares/roleMiddleware');
 const adminController = require('../controllers/adminController');
 
-// Middleware stack for admin-only access
-const requireAdmin = [authMiddleware, roleMiddleware('admin')];
+const requireAdmin = [authMiddleware, authorizeRoles('admin')];
+console.log('authMiddleware:', typeof authMiddleware);
+console.log('authorizeRoles("admin"):', typeof authorizeRoles("admin"));
+console.log('adminController.getOverview:', typeof adminController.getOverviewCounts);
+
+
 
 /**
- * USERS MANAGEMENT
- * - View all users
- * - (Optional) filter by region, role, etc.
+ * ADMIN OVERVIEW
+ * - Dashboard counts (total users, candidates, volunteers, etc.)
  */
-router.get('/users', requireAdmin, adminController.getAllUsers);
+router.get('/overview', ...requireAdmin, adminController.getOverviewCounts);
+
+/**
+ * USER MANAGEMENT
+ */
+router.get('/users', ...requireAdmin, adminController.getAllUsers);
+router.patch('/users/:id/role', ...requireAdmin, adminController.updateUserRole);
+router.patch('/users/:id/status', ...requireAdmin, adminController.updateUserStatus);
 
 /**
  * CANDIDATE MANAGEMENT
- * - View all candidates
- * - Approve or reject a candidate application
  */
-router.get('/candidates', requireAdmin, adminController.getAllCandidates);
-router.put('/candidates/:id/approve', requireAdmin, adminController.approveCandidate);
-router.put('/candidates/:id/reject', requireAdmin, adminController.rejectCandidate);
+// router.get('/candidates', ...requireAdmin, adminController.getAllCandidates);
+// router.put('/candidates/:id/approve', ...requireAdmin, adminController.approveCandidate);
+// router.put('/candidates/:id/reject', ...requireAdmin, adminController.rejectCandidate);
 
 /**
- * REGION / WARD MANAGEMENT
- * - Create, view, update, or delete regional units
+ * REGION / WARD MANAGEMENT (Commented out for now)
  */
-router.post('/regions', requireAdmin, adminController.createRegion);
-router.get('/regions', requireAdmin, adminController.getAllRegions);
-router.put('/regions/:id', requireAdmin, adminController.updateRegion);
-router.delete('/regions/:id', requireAdmin, adminController.deleteRegion);
+// router.post('/regions', ...requireAdmin, adminController.createRegion);
+// router.get('/regions', ...requireAdmin, adminController.getAllRegions);
+// router.put('/regions/:id', ...requireAdmin, adminController.updateRegion);
+// router.delete('/regions/:id', ...requireAdmin, adminController.deleteRegion);
 
 module.exports = router;
